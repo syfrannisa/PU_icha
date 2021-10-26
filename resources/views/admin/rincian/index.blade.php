@@ -8,11 +8,12 @@
 		</div>
 	@endif
 
+<div>
 
 	<a href="{{ route('rincian.create') }}" class="btn btn-info btn-sm"><i class="fas fa-plus"></i>Tambah</a>
 	<br><br>
 
-		<table border="1" bgcolor="white" style="width:95%" >
+	<table id="myTable" class="table table-bordered table-hover table-stripped">
 		<thead>
 			<th class="text-center">No</th>
 			<th class="text-center">Sub Kegiatan</th>
@@ -22,7 +23,7 @@
 		<tbody>
 			@foreach ($rincian as $result => $hasil)
 			<tr>
-				<td>{{ $result + $rincian->firstitem() }} </td>
+				<td>{{ $result + 1 }} </td>
 				<td>{{ optional($hasil->sub_kegiatan)->subkgt }}</td>
 				<td>{{ $hasil->nama_rincian}}</td>
 				<td>
@@ -37,6 +38,6 @@
 			@endforeach
 		</tbody>
 	</table>
-	{{ $rincian->links() }}
+</div>
 
 @endsection   

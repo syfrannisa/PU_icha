@@ -15,9 +15,14 @@ class CreateProgramTable extends Migration
     {
         Schema::create('program', function (Blueprint $table) {
             $table->Increments('id');
-            $table->integer('id_kpa')->unsigned()->nullable();
+            $table->integer('id_laporan')->unsigned()->nullable();
             $table->string('nama_program')->nullable();
-            $table->foreign('id_kpa')->references('id')->on('kpa')->onDelete('cascade');
+            $table->string('nama_kpa')->nullable();
+            $table->integer('pagu_anggaran')->nullable();
+            $table->integer('nilai_kontrak')->nullable();
+            $table->integer('rupiah')->nullable();
+            $table->integer('sisa_dana')->nullable();
+            $table->foreign('id_laporan')->references('id')->on('laporans')->onDelete('cascade');
             $table->timestamps();
         });
     }

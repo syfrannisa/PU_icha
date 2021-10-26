@@ -19,6 +19,7 @@ Route::get('/home', function () {
     return view('home');
 });
 
+Route::resource('/laporan', 'LaporanController');
 Route::resource('/kpa', 'KpaController');
 Route::resource('/pptk', 'PptkController');
 
@@ -27,4 +28,5 @@ Route::resource('/kegiatan', 'KegiatanController');
 Route::resource('/sub_kegiatan', 'Sub_kegiatanController');
 Route::resource('/rincian', 'RincianController');
 Route::resource('/sub_rincian', 'Sub_rincianController');
-Route::resource('/data_pbj', 'Data_pbjController');
+Route::get('/report', 'ReportController@index')->name('report.index');
+// Route::resource('/data_pbj', 'Data_pbjController');

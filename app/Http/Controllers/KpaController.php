@@ -16,7 +16,7 @@ class KpaController extends Controller
      */
     public function index()
     {
-        $kpa = Kpa::paginate(10);
+        $kpa = Kpa::get();
         return view('admin.kpa.index', compact('kpa'));
     }
 

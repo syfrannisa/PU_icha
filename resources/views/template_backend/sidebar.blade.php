@@ -9,10 +9,12 @@
           <ul class="sidebar-menu">
               <li class="menu-header">Home</li>
                <li class="active"><a class="nav-link" href=""><i class="fas fa-home"></i> <span> Home </span></a></li>
-
-              <li class="menu-header">Starter</li>
-
-              <li class="nav-item dropdown">
+               
+               <li class="menu-header">Starter</li>
+               
+               <li class="active"><a class="nav-link" href="{{ route('laporan.index') }}"><i class="fas fa-book"></i> <span> List PBJ </span></a></li>
+               <li class="active"><a class="nav-link" href="{{ route('report.index') }}"><i class="fas fa-print"></i> <span> Laporan </span></a></li>
+              {{-- <li class="nav-item dropdown">
                   <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas  fa-user"></i> <span>
                   Users</span></a>
                   <ul class="dropdown-menu">
@@ -47,6 +49,6 @@
                   <li><a class="nav-link" href="{{ route('data_pbj.index') }}"> List Data PBJ</a>
                   <li><a class="nav-link" href=""> Daftar Hapus Data PBJ</a></li>
                 </ul>
-              </li>
+              </li> --}}
         </aside>
       </div>

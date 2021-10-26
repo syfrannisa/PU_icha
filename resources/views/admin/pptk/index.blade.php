@@ -8,11 +8,12 @@
 		</div>
 	@endif
 
+<div>
 
 	<a href="{{ route('pptk.create') }}" class="btn btn-info btn-sm"><i class="fas fa-plus"></i>Tambah</a>
 	<br><br>
 
-		<table border="1" bgcolor="white" style="width:600px" >
+	<table id="myTable" class="table table-bordered table-hover table-stripped">
 		<thead>
 			<th class="text-center">No</th>
 			<th class="text-center">KPA</th>
@@ -22,7 +23,7 @@
 		<tbody>
 			@foreach ($pptk as $result => $hasil)
 			<tr>
-				<td>{{ $result + $pptk->firstitem() }} </td>
+				<td>{{ $result + 1 }} </td>
 				<td>{{ optional($hasil->kpa)->nama_kpa }}</td>
 				<td>{{ $hasil->nama_pptk}}</td>
 			
@@ -38,6 +39,6 @@
 			@endforeach
 		</tbody>
 	</table>
-	{{ $pptk->links() }}
+</div>
 
 @endsection   

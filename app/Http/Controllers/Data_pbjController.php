@@ -23,7 +23,7 @@ class Data_pbjController extends Controller
      */
     public function index()
     {
-        $data_pbj = Data_pbj::with(['kpa','program','kegiatan','pptk','sub_kegiatan','rincian','sub_rincian','pagu_anggaran','nilai_kontrak','pelaksana','nomor_kontrak','mulai','selesai','sistem_pengadaan','fisik','rupiah','sisa_dana','catatan_masalah'])->get();
+        $data_pbj = Data_pbj::with(['kpa'])->get();
         // dd($sub_bidang);
         return view('admin.data_pbj.index', compact('data_pbj'));
     }

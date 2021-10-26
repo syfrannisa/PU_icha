@@ -18,7 +18,7 @@ class RincianController extends Controller
      */
     public function index()
     {
-        $rincian = Rincian::with('sub_kegiatan')->paginate(10);
+        $rincian = Rincian::with('sub_kegiatan')->get();
         return view('admin.rincian.index', compact('rincian'));
     }
 
@@ -27,10 +27,12 @@ class RincianController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $sub_kegiatan = Sub_kegiatan::all();
-        return view('admin.rincian.create', compact('sub_kegiatan'));
+        $id_laporan = $request->data_id;
+        $status = 'Tambah';
+        $subkegiatan = Sub_kegiatan::where('id_laporan',$id_laporan)->get();
+        return view('admin.rincian.form', compact('subkegiatan','status','id_laporan'));
     }
 
     /**
@@ -42,39 +44,38 @@ class RincianController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-                'id_sub_kegiatan'       => 'required',
-                'nama_rincian' => 'required',
-            );
+            'nama_rincian' => 'required',
+        );
 
-            $messages = [
-                'id_sub_kegiatan.required'       => 'Sub Kegiatan tidak boleh kosong!',
-                'nama_rincian.required' => 'Rincian tidak boleh kosong!',
-            ];
+        $messages = [
+            'nama_rincian.required'       => 'Rincian tidak boleh kosong!',
+        ];
 
-            $validator = Validator::make($request->all(), $rules, $messages);
-     
-            if($validator->fails()){
-                return redirect()->back()->withErrors($validator)->withInput($request->all);
-            }
+        $validator = Validator::make($request->all(), $rules, $messages);
+ 
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput($request->all);
+        }
 
-           //$rincian = Rincian::create([
-            //'id_sub_kegiatan'       => $request->id_sub_kegiatan,
-            //'nama_rincian' => $request->nama_rincian,
-           //]);
+        $id_laporan = $request->id_laporan;
+       $rincian = new Rincian;
+       $rincian->id_laporan = $id_laporan;
+       $rincian->id_sub_kegiatan = $request->id_sub_kegiatan;
+       $rincian->nama_rincian = $request->nama_rincian;
+       $rincian->pagu_anggaran = $request->pagu_anggaran;
+       $rincian->nilai_kontrak = $request->nilai_kontrak;
+       $rincian->rupiah = $request->rupiah;
+       $rincian->sisa_dana = $request->sisa_dana;
+       $rincian->pelaksana = $request->pelaksana;
+        $rincian->nomor_kontrak = $request->nomor_kontrak;
+        $rincian->mulai = $request->mulai;
+        $rincian->selesai = $request->selesai;
+        $rincian->sistem_pengadaan = $request->sistem_pengadaan;
+        $rincian->fisik = $request->fisik;
+        $rincian->catatan_masalah = $request->catatan_masalah;
+       $rincian->save();
 
-            $rincian = new Rincian;
-            $rincian->id_sub_kegiatan = $request->id_sub_kegiatan;
-            $rincian->nama_rincian = $request->nama_rincian;
-            $rincian->save();
-           
-            $data_pbj = new Data_pbj;
-            $data_pbj->id_rincian = $rincian->id;
-            $data_pbj->pagu_anggaran = $request->pagu_anggaran;
-            $data_pbj->save();
-
-           // $sub_bidang->bidang()->attach($request->bidang);
-  
-            return redirect()->route('rincian.index')->with('success','Data Anda Berhasil diSimpan');
+        return redirect()->route('laporan.show',$id_laporan)->with('success','Data Anda Berhasil Disimpan');
     }
 
     /**
@@ -94,11 +95,13 @@ class RincianController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $sub_kegiatan = Sub_kegiatan::all();
-        $rincian = Rincian::findOrfail($id);
-        return view('admin.rincian.edit', compact('rincian','sub_kegiatan'));
+        $id_laporan = $request->data_id;
+        $status = 'Edit';
+        $subkegiatan = Sub_kegiatan::where('id_laporan',$id_laporan)->get();
+        $data = Rincian::firstWhere('id',$id);
+        return view('admin.rincian.form', compact('data','subkegiatan','status','id_laporan'));
     }
 
     /**
@@ -111,12 +114,10 @@ class RincianController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-                'id_sub_kegiatan' => 'required',
                 'nama_rincian' => 'required',
             );
 
             $messages = [
-                'id_sub_kegiatan.required'       => 'Sub Kegiatan tidak boleh kosong!',
                 'nama_rincian.required'       => 'Rincian tidak boleh kosong!',
             ];
 
@@ -126,14 +127,25 @@ class RincianController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput($request->all);
             }
 
-            $rincian = Rincian::findOrfail($id);
+            $id_laporan = $request->id_laporan;
+           $rincian = Rincian::firstWhere('id',$id);
+           $rincian->id_laporan = $id_laporan;
+           $rincian->id_sub_kegiatan = $request->id_sub_kegiatan;
+           $rincian->nama_rincian = $request->nama_rincian;
+           $rincian->pagu_anggaran = $request->pagu_anggaran;
+           $rincian->nilai_kontrak = $request->nilai_kontrak;
+           $rincian->rupiah = $request->rupiah;
+           $rincian->sisa_dana = $request->sisa_dana;
+           $rincian->pelaksana = $request->pelaksana;
+            $rincian->nomor_kontrak = $request->nomor_kontrak;
+            $rincian->mulai = $request->mulai;
+            $rincian->selesai = $request->selesai;
+            $rincian->sistem_pengadaan = $request->sistem_pengadaan;
+            $rincian->fisik = $request->fisik;
+            $rincian->catatan_masalah = $request->catatan_masalah;
+           $rincian->save();
 
-            $rincian->id_sub_kegiatan = $request->id_sub_kegiatan ;
-            $rincian->nama_rincian = $request->nama_rincian;
-
-            $rincian->save();
-
-            return redirect()->route('rincian.index')->with('success','Data Anda Berhasil diUpdate'); 
+            return redirect()->route('laporan.show',$id_laporan)->with('success','Data Anda Berhasil Update');
     }
 
     /**

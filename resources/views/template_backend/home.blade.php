@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="{{ asset('public/assets//node_modules/select2/dist/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset('public/assets/css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('public//assets/css/components.css') }}">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 </head>
 
 <body>
@@ -53,9 +54,13 @@
             <h1>@yield('sub-judul')</h1>
           </div>
 
-          @yield('content')
-
+          
           <div class="section-body">
+            <div class="card">
+              <div class="card body p-5">
+                @yield('content')
+              </div>
+            </div>
           </div>
         </section>
       </div>

@@ -28,7 +28,7 @@
 		<tbody>
 			@foreach ($data_pbj as $result => $hasil)
 			<tr>
-				<td>{{ $result + $data_pbj->firstitem() }} </td>
+				<td>{{ $result + 1 }} </td>
 				<td>{{ optional($hasil->kpa)->nama_kpa }}</td>
 				<td>{{ optional($hasil->program)->nama_program }}</td>
 				<td>{{ optional($hasil->kegiatan)->nama_kegiatan }}</td>
@@ -49,10 +49,10 @@
 				<td><center>{{ $hasil->sisa_dana }}</td>
 				<td><center>{{ $hasil->catatan_masalah }}</td>
 				<td>
-					<form action="{{ route('data_pbj.destroy', $hasil->id) }}" method="POST"> 
+					<form action="" method="POST"> 
 						@csrf
 						@method('delete')
-						<a href="{{ route('data_pbj.edit', $hasil->id ) }}" class="btn btn-primary btn-sm">Edit</a>
+						<a href="" class="btn btn-primary btn-sm">Edit</a>
 					<button type="submit" class="btn btn-danger btn-sm">Delete</button>
 					</form>
 				</td>

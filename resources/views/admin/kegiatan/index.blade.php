@@ -8,11 +8,14 @@
 		</div>
 	@endif
 
+<div>
+
+<div>
 
 	<a href="{{ route('kegiatan.create') }}" class="btn btn-info btn-sm"><i class="fas fa-plus"></i>Tambah</a>
 	<br><br>
 
-		<table border="1" bgcolor="white" style="width:100%" >
+	<table id="myTable" class="table table-bordered table-hover table-stripped">
 		<thead>
 			<th class="text-center">No</th>
 			<th class="text-center">Program</th>
@@ -22,7 +25,7 @@
 		<tbody>
 			@foreach ($kegiatan as $result => $hasil)
 			<tr>
-				<td>{{ $result + $kegiatan->firstitem() }} </td>
+				<td>{{ $result + 1 }} </td>
 				<td>{{ optional($hasil->program)->nama_program }}</td>
 				<td>{{ $hasil->nama_kegiatan}}</td>
 				<td>
@@ -37,6 +40,7 @@
 			@endforeach
 		</tbody>
 	</table>
-	{{ $kegiatan->links() }}
+</div>
+</div>
 
 @endsection   

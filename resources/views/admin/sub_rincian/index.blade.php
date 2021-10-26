@@ -8,11 +8,11 @@
 		</div>
 	@endif
 
-
+<div>
 	<a href="{{ route('sub_rincian.create') }}" class="btn btn-info btn-sm"><i class="fas fa-plus"></i>Tambah</a>
 	<br><br>
 
-		<table border="1" bgcolor="white" style="width:60%" >
+		<table id="myTable" class="table table-bordered table-hover table-stripped">
 		<thead>
 			<th class="text-center">No</th>
 			<th class="text-center">Rincian</th>
@@ -22,7 +22,7 @@
 		<tbody>
 			@foreach ($sub_rincian as $result => $hasil)
 			<tr>
-				<td>{{ $result + $sub_rincian->firstitem() }} </td>
+				<td>{{ $result + 1}} </td>
 				<td>{{ optional($hasil->rincian)->nama_rincian }}</td>
 				<td>{{ $hasil->nama_sub_rincian}}</td>
 				<td>
@@ -37,6 +37,6 @@
 			@endforeach
 		</tbody>
 	</table>
-	{{ $sub_rincian->links() }}
+</div>
 
 @endsection   

@@ -18,7 +18,7 @@ class Sub_rincianController extends Controller
      */
     public function index()
     {
-        $sub_rincian = Sub_rincian::with('rincian')->paginate(10);
+        $sub_rincian = Sub_rincian::with('rincian')->get();
         return view('admin.sub_rincian.index', compact('sub_rincian'));
     }
 
@@ -27,10 +27,12 @@ class Sub_rincianController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $rincian = Rincian::all();
-        return view('admin.sub_rincian.create', compact('rincian'));
+        $id_laporan = $request->data_id;
+        $status = 'Tambah';
+        $rincian = Rincian::where('id_laporan',$id_laporan)->get();
+        return view('admin.sub_rincian.form', compact('rincian','status','id_laporan'));
     }
 
     /**
@@ -42,14 +44,12 @@ class Sub_rincianController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-                'id_rincian'       => 'required',
-                'nama_sub_rincian' => 'nullable',
-            );
+            'nama_sub_rincian' => 'required',
+        );
 
-            $messages = [
-                'id_rincian.required'       => 'Rincian tidak boleh kosong!',
-                'nama_sub_rincian.nullable' 
-            ];
+        $messages = [
+            'nama_sub_rincian.required'       => 'Sub Rincian tidak boleh kosong!',
+        ];
 
             $validator = Validator::make($request->all(), $rules, $messages);
      
@@ -57,35 +57,24 @@ class Sub_rincianController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput($request->all);
             }
 
-           // $program = Data::create([
-           //  'id_program'       => $request->id_kpa,
-           //  'nama_program' => $request->nama_program,
-           
-           // ]);
-            $sub_rincian = new Sub_rincian;
-            $sub_rincian->id_rincian = $request->id_rincian;
-            $sub_rincian->nama_sub_rincian = $request->nama_sub_rincian;
-            $sub_rincian->save();
+            $id_laporan = $request->id_laporan;
+           $rincian = new Sub_rincian;
+           $rincian->id_rincian = $request->id_rincian;
+           $rincian->nama_sub_rincian = $request->nama_sub_rincian;
+           $rincian->pagu_anggaran = $request->pagu_anggaran;
+           $rincian->nilai_kontrak = $request->nilai_kontrak;
+           $rincian->rupiah = $request->rupiah;
+           $rincian->sisa_dana = $request->sisa_dana;
+           $rincian->pelaksana = $request->pelaksana;
+            $rincian->nomor_kontrak = $request->nomor_kontrak;
+            $rincian->mulai = $request->mulai;
+            $rincian->selesai = $request->selesai;
+            $rincian->sistem_pengadaan = $request->sistem_pengadaan;
+            $rincian->fisik = $request->fisik;
+            $rincian->catatan_masalah = $request->catatan_masalah;
+           $rincian->save();
 
-            $data_pbj = new Data_pbj;
-            $data_pbj->id_sub_rincian = $sub_rincian->id;
-            $data_pbj->pagu_anggaran = $request->pagu_anggaran;
-            $data_pbj->nilai_kontrak = $request->nilai_kontrak;
-            $data_pbj->pelaksana = $request->pelaksana;
-            $data_pbj->nomor_kontrak = $request->nomor_kontrak;
-            $data_pbj->mulai = $request->mulai;
-            $data_pbj->selesai = $request->selesai;
-            $data_pbj->sistem_pengadaan = $request->sistem_pengadaan;
-            $data_pbj->fisik = $request->fisik;
-            $data_pbj->rupiah = $request->rupiah;
-            $data_pbj->sisa_dana = $request->sisa_dana;
-            $data_pbj->catatan_masalah = $request->catatan_masalah;
-
-            $data_pbj->save();
-
-           // $sub_bidang->bidang()->attach($request->bidang);
-  
-            return redirect()->route('sub_rincian.index')->with('success','Data anda berhasil disimpan'); 
+            return redirect()->route('laporan.show',$id_laporan)->with('success','Data Anda Berhasil Disimpan');
     }
 
     /**
@@ -105,11 +94,13 @@ class Sub_rincianController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $rincian = Rincian::all();
-        $sub_rincian = Sub_rincian::findOrfail($id);
-        return view('admin.sub_rincian.edit', compact('sub_rincian','rincian'));
+        $id_laporan = $request->data_id;
+        $status = 'Edit';
+        $rincian = Rincian::where('id_laporan',$id_laporan)->get();
+        $data = Sub_rincian::firstWhere('id',$id);
+        return view('admin.sub_rincian.form', compact('data','rincian','status','id_laporan'));
     }
 
     /**
@@ -122,14 +113,12 @@ class Sub_rincianController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-                'id_rincian' => 'required',
-                'nama_sub_rincian' => 'nullable',
-            );
+            'nama_sub_rincian' => 'required',
+        );
 
-            $messages = [
-                'id_rincian.required'       => 'Rincian tidak boleh kosong!',
-                'nama_sub_rincian.nullable'
-            ];
+        $messages = [
+            'nama_sub_rincian.required'       => 'Sub Rincian tidak boleh kosong!',
+        ];
 
             $validator = Validator::make($request->all(), $rules, $messages);
      
@@ -137,31 +126,24 @@ class Sub_rincianController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput($request->all);
             }
 
-            $sub_rincian = Sub_rincian::findOrfail($id);
+            $id_laporan = $request->id_laporan;
+           $rincian = Sub_rincian::firstWhere('id',$id);
+           $rincian->id_rincian = $request->id_rincian;
+           $rincian->nama_sub_rincian = $request->nama_sub_rincian;
+           $rincian->pagu_anggaran = $request->pagu_anggaran;
+           $rincian->nilai_kontrak = $request->nilai_kontrak;
+           $rincian->rupiah = $request->rupiah;
+           $rincian->sisa_dana = $request->sisa_dana;
+           $rincian->pelaksana = $request->pelaksana;
+            $rincian->nomor_kontrak = $request->nomor_kontrak;
+            $rincian->mulai = $request->mulai;
+            $rincian->selesai = $request->selesai;
+            $rincian->sistem_pengadaan = $request->sistem_pengadaan;
+            $rincian->fisik = $request->fisik;
+            $rincian->catatan_masalah = $request->catatan_masalah;
+           $rincian->save();
 
-
-            $sub_rincian->id_rincian = $request->id_rincian ;
-            $sub_rincian->nama_sub_rincian = $request->nama_sub_rincian;
-            $sub_rincian->pagu_anggaran = $request->pagu_anggaran;
-            $sub_rincian->nilai_kontrak = $request->nilai_kontrak;
-            $sub_rincian->pelaksana = $request->pelaksana;
-            $sub_rincian->nomor_kontrak = $request->nomor_kontrak;
-            $sub_rincian->mulai = $request->mulai;
-            $sub_rincian->selesai = $request->selesai;
-            $sub_rincian->sistem_pengadaan = $request->sistem_pengadaan;
-            $sub_rincian->fisik = $request->fisik;
-            $sub_rincian->rupiah = $request->rupiah;
-            $sub_rincian->sisa_dana = $request->pagu_anggaran-$request->rupiah;
-            $sub_rincian->catatan_masalah = $request->catatan_masalah;
-
-            
-            $sub_rincian->save();
-
-            //$data = Data::firstWhere('id_program',$program->id);
-            //$data->pagu_anggaran = $request->pagu_anggaran;
-            //$data->save();
-
-            return redirect()->route('sub_rincian.index')->with('success','Data anda berhasil update');
+            return redirect()->route('laporan.show',$id_laporan)->with('success','Data Anda Berhasil Update');
     }
 
     /**

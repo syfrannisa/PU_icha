@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Program extends Model
+class Laporan extends Model
 {
-    protected $table = 'program';
+    protected $table = 'laporans';
     protected $primaryKey = 'id';
     protected $dates = ['created_at', 'updated_at'];
     protected $guarded = [];
 
-     public function kegiatan(){
-        return $this->hasMany(\App\Kegiatan::class,'id_program','id');  
+    public function program(){
+        return $this->hasMany(\App\Program::class,'id_laporan','id');  
     }
 }

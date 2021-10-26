@@ -18,7 +18,7 @@ class PptkController extends Controller
      */
     public function index()
     {
-        $pptk = Pptk::with('kpa')->paginate(10);
+        $pptk = Pptk::with('kpa')->get();
         return view('admin.pptk.index', compact('pptk'));
     }
 

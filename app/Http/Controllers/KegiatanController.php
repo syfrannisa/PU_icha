@@ -18,7 +18,7 @@ class KegiatanController extends Controller
      */
     public function index()
     {
-        $kegiatan = Kegiatan::with('program')->paginate(10);
+        $kegiatan = Kegiatan::with('program')->get();
         return view('admin.kegiatan.index', compact('kegiatan'));
     }
 
@@ -27,10 +27,12 @@ class KegiatanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $program = Program::all();
-        return view('admin.kegiatan.create', compact('program'));
+        $id_laporan = $request->data_id;
+        $status = 'Tambah';
+        $program = Program::where('id_laporan',$id_laporan)->get();
+        return view('admin.kegiatan.form', compact('program','status','id_laporan'));
     }
 
     /**
@@ -56,26 +58,19 @@ class KegiatanController extends Controller
             if($validator->fails()){
                 return redirect()->back()->withErrors($validator)->withInput($request->all);
             }
-
-           //$kegiatan = Kegiatan::create([
-            //'id_program'       => $request->id_program,
-            //'nama_kegiatan' => $request->nama_kegiatan,
-           //]);
-
-            $kegiatan = new kegiatan;
-            $kegiatan->id_program = $request->id_program;
+            $id_laporan = $request->id_laporan;
+            $kegiatan = new Kegiatan;
+           $kegiatan->id_laporan = $id_laporan;
+           $kegiatan->id_program = $request->id_program;
             $kegiatan->nama_kegiatan = $request->nama_kegiatan;
+            $kegiatan->nama_pptk = $request->nama_pptk;
+            $kegiatan->pagu_anggaran = $request->pagu_anggaran;
+            $kegiatan->nilai_kontrak = $request->nilai_kontrak;
+            $kegiatan->rupiah = $request->rupiah;
+            $kegiatan->sisa_dana = $request->sisa_dana;
             $kegiatan->save();
 
-            $data_pbj = new Data_pbj;
-            $data_pbj->id_kegiatan = $kegiatan->id;
-            $data_pbj->pagu_anggaran = $request->pagu_anggaran;
-            $data_pbj->save();            
-           
-
-           // $sub_bidang->bidang()->attach($request->bidang);
-  
-            return redirect()->route('kegiatan.index')->with('success','Data Anda Berhasil diSimpan'); 
+            return redirect()->route('laporan.show',$id_laporan)->with('success','Data Anda Berhasil diSimpan'); 
     }
 
     /**
@@ -95,11 +90,13 @@ class KegiatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $program = Program::all();
-        $kegiatan = Kegiatan::findOrfail($id);
-        return view('admin.kegiatan.edit', compact('kegiatan','program'));
+        $id_laporan = $request->data_id;
+        $status = 'Edit';
+        $program = Program::where('id_laporan',$id_laporan)->get();
+        $data = Kegiatan::firstWhere('id',$id);
+        return view('admin.kegiatan.form', compact('data','program','status','id_laporan'));
     }
 
     /**
@@ -127,13 +124,19 @@ class KegiatanController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput($request->all);
             }
 
-            $kegiatan = Kegiatan::findOrfail($id);
-
-            $kegiatan->id_program = $request->id_program ;
+            $id_laporan = $request->id_laporan;
+            $kegiatan = Kegiatan::firstWhere('id',$id);
+           $kegiatan->id_laporan = $id_laporan;
+           $kegiatan->id_program = $request->id_program;
             $kegiatan->nama_kegiatan = $request->nama_kegiatan;
+            $kegiatan->nama_pptk = $request->nama_pptk;
+            $kegiatan->pagu_anggaran = $request->pagu_anggaran;
+            $kegiatan->nilai_kontrak = $request->nilai_kontrak;
+            $kegiatan->rupiah = $request->rupiah;
+            $kegiatan->sisa_dana = $request->sisa_dana;
             $kegiatan->save();
 
-            return redirect()->route('kegiatan.index')->with('success','Data Anda Berhasil Update');
+            return redirect()->route('laporan.show',$id_laporan)->with('success','Data Anda Berhasil Update');
     }
 
     /**
@@ -142,11 +145,12 @@ class KegiatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        $kegiatan = Kegiatan::findorfail($id);
+        $id_laporan = $request->id_laporan;
+        $kegiatan = Kegiatan::firstWhere('id',$id);
         $kegiatan->delete();
 
-        return redirect()->back()->with('success','Data Berhasil Dihapus');
+        return redirect()->route('laporan.show',$id_laporan)->with('success','Data Berhasil Dihapus');
     }
 }

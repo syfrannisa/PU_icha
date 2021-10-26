@@ -8,11 +8,12 @@
 		</div>
 	@endif
 
+<div>
 
 	<a href="{{ route('kpa.create') }}" class="btn btn-info btn-sm"><i class="fas fa-plus"></i>Tambah</a>
 	<br><br>
 
-	<table border="1" bgcolor="white" style="width:50%" >
+	<table id="myTable" class="table table-bordered table-hover table-stripped">
 		<thead>
 			<th>No</th>
 			<th class="text-center">Nama KPA</th>
@@ -22,7 +23,7 @@
 		<tbody>
 			@foreach ($kpa as $result => $hasil)
 			<tr>
-				<td>{{ $result + $kpa->firstitem() }} </td>
+				<td>{{ $result + 1 }} </td>
 				<td>{{ $hasil->nama_kpa}}</td>
 				<td>
 					<form action="{{ route('kpa.destroy', $hasil->id) }}" method="POST"> 
@@ -36,6 +37,6 @@
 			@endforeach
 		</tbody>
 	</table>
-	{{ $kpa->links() }}
+</div>
 
 @endsection   

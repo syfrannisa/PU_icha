@@ -18,7 +18,7 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $program = Program::with('kpa')->paginate(10);
+        $program = Program::with('kpa')->get();
         return view('admin.program.index', compact('program'));
     }
 
@@ -27,10 +27,11 @@ class ProgramController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $kpa = Kpa::all();
-        return view('admin.program.create', compact('kpa'));
+        $id_laporan = $request->data_id;
+        $status = 'Tambah';
+        return view('admin.program.form', compact('status','id_laporan'));
     }
 
     /**
@@ -42,12 +43,10 @@ class ProgramController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-                'id_kpa'       => 'required',
                 'nama_program' => 'required',
             );
 
             $messages = [
-                'id_kpa.required'       => 'KPA tidak boleh kosong!',
                 'nama_program.required' => 'Program sub bidang tidak boleh kosong!',
             ];
 
@@ -62,19 +61,18 @@ class ProgramController extends Controller
            //  'nama_program' => $request->nama_program,
            
            // ]);
-            $program = new Program;
-            $program->id_kpa = $request->id_kpa;
-            $program->nama_program = $request->nama_program;
-            $program->save();
+           $id_laporan = $request->id_laporan;
+           $program = new Program;
+           $program->id_laporan = $id_laporan;
+           $program->nama_program = $request->nama_program;
+           $program->nama_kpa = $request->nama_kpa;
+           $program->pagu_anggaran = $request->pagu_anggaran;
+           $program->nilai_kontrak = $request->nilai_kontrak;
+           $program->rupiah = $request->rupiah;
+           $program->sisa_dana = $request->sisa_dana;
+           $program->save();
 
-            $data_pbj = new Data_pbj;
-            $data_pbj->id_program = $program->id;
-            $data_pbj->pagu_anggaran = $request->pagu_anggaran;
-            $data_pbj->save();
-
-           // $sub_bidang->bidang()->attach($request->bidang);
-  
-            return redirect()->route('program.index')->with('success','Postingan anda berhasil disimpan'); 
+           return redirect()->route('laporan.show',$id_laporan)->with('success','Data Anda Berhasil Update');
     }
 
     /**
@@ -94,11 +92,12 @@ class ProgramController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $kpa = Kpa::all();
-        $program = Program::findOrfail($id);
-        return view('admin.program.edit', compact('program','kpa'));
+        $id_laporan = $request->data_id;
+        $status = 'Edit';
+        $data = Program::firstWhere('id',$id);
+        return view('admin.program.form', compact('status','data','id_laporan'));
     }
 
     /**
@@ -111,13 +110,11 @@ class ProgramController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-                'id_kpa' => 'required',
                 'nama_program' => 'required',
             );
 
             $messages = [
-                'id_kpa.required'       => 'Bidang tidak boleh kosong!',
-                'nama_program.required'       => 'Nama sub bidang tidak boleh kosong!',
+                'nama_program.required'       => 'Nama Program tidak boleh kosong!',
             ];
 
             $validator = Validator::make($request->all(), $rules, $messages);
@@ -126,18 +123,18 @@ class ProgramController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput($request->all);
             }
 
-           $program = Program::findOrfail($id);
-
-
-            $program->id_kpa = $request->id_kpa ;
+            $id_laporan = $request->id_laporan;
+            $program = Program::firstWhere('id',$id);
+            $program->id_laporan = $id_laporan;
             $program->nama_program = $request->nama_program;
+            $program->nama_kpa = $request->nama_kpa;
+            $program->pagu_anggaran = $request->pagu_anggaran;
+            $program->nilai_kontrak = $request->nilai_kontrak;
+            $program->rupiah = $request->rupiah;
+            $program->sisa_dana = $request->sisa_dana;
             $program->save();
 
-            //$data = Data::firstWhere('id_program',$program->id);
-            //$data->pagu_anggaran = $request->pagu_anggaran;
-            //$data->save();
-
-            return redirect()->route('program.index')->with('success','Postingan anda berhasil update'); 
+            return redirect()->route('laporan.show',$id_laporan)->with('success','Data Anda Berhasil Update');
     }
 
     /**
@@ -146,9 +143,10 @@ class ProgramController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        $program = Program::findorfail($id);
+        $id_laporan = $request->id_laporan;
+        $program = Program::firstWhere('id',$id);
         $program->delete();
 
         return redirect()->back()->with('success','Posts Berhasil Dihapus');

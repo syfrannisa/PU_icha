@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Data_pbj extends Model
 {
-    protected $fillable =['id_kpa','id_program','id_kegiatan','id_pptk','id_sub_kegiatan','id_rincian','id_sub_rincian','pagu_anggaran','nilai_kontrak','pelaksana','nomor_kontrak','mulia','selesai','sistem_pengadaan','fisik','rupiah','sisa_dana','catatan_masalah'];
+    // protected $fillable =['id_kpa','id_program','id_kegiatan','id_pptk','id_sub_kegiatan','id_rincian','id_sub_rincian','pagu_anggaran','nilai_kontrak','pelaksana','nomor_kontrak','mulia','selesai','sistem_pengadaan','fisik','rupiah','sisa_dana','catatan_masalah'];
     protected $table = 'data_pbj';
 
      public function kpa(){ 
